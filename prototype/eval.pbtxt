@@ -1,0 +1,14 @@
+name: "eval"
+stop_condition {
+  all_processed: true
+}
+
+operation_type: TEST
+batch_size: 128
+data_proto: "/home/hvpham/experiments/data/timit_conv/data.pbtxt"
+randomize: false
+verbose: true
+get_last_piece: true
+result_file: "/home/hvpham/experiments/timit_conv/result_test.csv"
+result_file_validation_set: "/home/hvpham/experiments/timit_conv/result_val.csv"
+gpu_id: 1

@@ -1,0 +1,21 @@
+name: "train"
+optimizer: GRADIENT_DESCENT
+
+stop_condition {
+  all_processed: false
+  steps: 50000
+}
+
+operation_type: TRAIN
+batch_size: 128
+data_proto: "/home/hvpham/experiments/data/timit_conv/data.pbtxt"
+eval_after: 1000
+checkpoint_after: -1
+checkpoint_directory: "/home/hvpham/experiments/timit_conv/cp"
+randomize: true
+random_seed: 42
+verbose: true
+normalize_each_train_step: true
+collect_train_acc: true
+collect_eval_acc: true
+gpu_id: 1

@@ -1,0 +1,135 @@
+name: "conv_timit"
+model_type: FNN
+
+hyper_params
+{
+  base_learningrate: 0.1
+  learningrate_decay: DECAY_EXPONENTIAL
+  learningrate_decay_half_life: 10000
+  select_model_criterion: CRITERION_NLL
+  initialization: CONSTANT
+  constant: 0
+  #ignore_bias: true
+  apply_l2_decay: true
+  l2_decay: 0.001
+  initial_momentum : 0.3
+  final_momentum : 0.9
+  momentum_change_steps : 10000
+  normalize_edges: false
+}
+
+
+nodes {
+  name: "input"
+  type: INPUT
+  dimension: 841
+  input_start_index: 0
+}
+
+nodes {
+  name: "output"
+  type: OUTPUT
+  activation: SOFTMAX
+  loss_function: POSTERIOR
+  dimension: 1957
+  input_start_index: 841
+  label_start_index: 0
+}
+
+nodes {
+  name: "conv1"
+  type: SUM
+  dimension: 10816
+  activation: TANH
+}
+
+nodes {
+  name: "conv2"
+  type: SUM
+  dimension: 1152
+  activation: TANH
+}
+
+nodes {
+  name: "hidden1"
+  type: SUM
+  dimension: 1024
+  activation: TANH
+}
+
+nodes {
+  name: "hidden2"
+  type: SUM
+  dimension: 1024
+  activation: TANH
+}
+
+############################################################################
+
+edges {
+  node1: "input"
+  node2: "conv1"
+  conv {
+    size: 4
+    stride: 1
+    padding: 0
+    num_filters: 64
+    num_colors: 1
+    pool_mode: MAX_POOL
+    pool_size: 2
+    pool_stride: 2
+  }
+  hyper_params {
+    initialization: DENSE_GAUSSIAN
+    sigma: 0.25             # 0.01
+    apply_l2_decay: false
+  }
+}
+
+edges {
+  node1: "conv1"
+  node2: "conv2"
+  conv {
+    size: 5
+    stride: 1
+    padding: 0
+    num_filters: 128
+    num_colors: 64
+    pool_mode: MAX_POOL
+    pool_size: 3
+    pool_stride: 3
+  }
+  hyper_params {
+    initialization: DENSE_GAUSSIAN
+    sigma: 0.025
+    apply_l2_decay: false
+  }
+}
+
+edges {
+  node1: "conv2"
+  node2: "hidden1"
+  hyper_params {
+    initialization: DENSE_GAUSSIAN
+    sigma: 0.03
+  }
+}
+
+edges {
+  node1: "hidden1"
+  node2: "hidden2"
+  hyper_params {
+    initialization: DENSE_GAUSSIAN
+    sigma: 0.03
+  }
+}
+
+edges {
+  node1: "hidden2"
+  node2: "output"
+  hyper_params {
+    initialization: DENSE_GAUSSIAN
+    sigma: 0.03
+  }
+}
+
