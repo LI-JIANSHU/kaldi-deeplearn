@@ -1,5 +1,5 @@
 import config
-import os, subprocess
+import os, subprocess, sys
 
 def run(sResultDir, sSrcDirs, sModelFileName):
     for i in xrange(0, config.PHONES):
@@ -29,7 +29,9 @@ def run(sResultDir, sSrcDirs, sModelFileName):
                 exit(1)
                 
 if __name__ == '__main__':
-    run('/home/hvpham/kaldiPDNN/kaldi-trunk/egs/timit/s5/kaldi-deeplearn/models', \
-        ['/home/hvpham/experiments/timit_conv_pairwise/cp', \
-         '/home/hvpham/experiments/timit_conv_pairwise/cp/titan'], \
-         'timit_conv_pairwise_train_BEST.fnn')
+    #run('/home/hvpham/kaldiPDNN/kaldi-trunk/egs/timit/s5/kaldi-deeplearn/models', \
+    #    ['/home/hvpham/experiments/timit_conv_pairwise/cp', \
+    #     '/home/hvpham/experiments/timit_conv_pairwise/cp/titan'], \
+    #     'timit_conv_pairwise_train_BEST.fnn')
+    
+    run(sys.argv[1], sys.argv[2].split(';'), sys.argv[3])
