@@ -26,8 +26,9 @@ def pfile2Proto(pfilePath, filePrefix, pbmDir):
     dsInfo.label_start_index = dim - 1
     return dsInfo
     
-def createPbmDataset(pfiles, pbmDir, protoFilePath):
-
+def createPbmDataset(pfiles, pbmDir, protoFilePath, gpuMem):
+    assert gpuMem > 0.1
+    
     dbInfo = dl.DatabaseInfo()
     
     for (name, sPath) in pfiles:
@@ -45,7 +46,7 @@ def createPbmDataset(pfiles, pbmDir, protoFilePath):
     dbInfo.name = 'dataset'
     dbInfo.data_handler = 'deeplearn'
     dbInfo.main_memory = 6.0
-    dbInfo.gpu_memory = 4.0
+    dbInfo.gpu_memory = gpuMem
     dbInfo.path_prefix = pbmDir
     util.WriteProto(protoFilePath, dbInfo)
     

@@ -52,14 +52,18 @@ if __name__ == '__main__':
     sOutputModelFile = arguments['output_file']
     sWeightOutputFile = arguments['weight_output_file']
     sDeeplearnPath = arguments['deeplearn_path']
-    
+    if 'gpu_mem' in arguments:
+        fGpuMem = arguments['gpu_mem']
+    else:
+        fGpuMem = 2.0
+        
     # create dataset (from PFile to proto)
     sDataDir = os.path.join(wdir, 'data/proto')
     createDir(sDataDir)
     sDataProtoFile = os.path.join(sDataDir, 'data.pbtxt')
     if not os.path.exists(sDataProtoFile):
         pfile2pbm.createPbmDataset([['train', train_data_file], ['valid', valid_data_file]], \
-            sDataDir, sDataProtoFile)
+            sDataDir, sDataProtoFile, fGpuMem)
     else:
         print 'Found data.pbtxt at', sDataProtoFile
         print 'Skip generating dataset'
