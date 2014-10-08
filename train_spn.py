@@ -53,7 +53,7 @@ if __name__ == '__main__':
     sWeightOutputFile = arguments['weight_output_file']
     sDeeplearnPath = arguments['deeplearn_path']
     if 'gpu_mem' in arguments:
-        fGpuMem = arguments['gpu_mem']
+        fGpuMem = float(arguments['gpu_mem'])
     else:
         fGpuMem = 2.0
         
