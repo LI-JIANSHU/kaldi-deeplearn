@@ -46,7 +46,7 @@ def createPbmDataset(pfiles, pbmDir, protoFilePath, gpuMem):
     dbInfo.name = 'dataset'
     dbInfo.data_handler = 'deeplearn'
     dbInfo.main_memory = 6.0
-    dbInfo.gpu_memory = gpuMem
+    dbInfo.gpu_memory = float(gpuMem)
     dbInfo.path_prefix = pbmDir
     util.WriteProto(protoFilePath, dbInfo)
     
