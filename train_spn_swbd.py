@@ -62,9 +62,7 @@ if __name__ == '__main__':
     createDir(sDataDir)
     sDataProtoFile = os.path.join(sDataDir, 'data.pbtxt')
     if not os.path.exists(sDataProtoFile):
-	print "Hexieshehui"
-        #pfile2pbm.createPbmDataset([['train', train_data_file], ['valid', valid_data_file]], \
-         #   sDataDir, sDataProtoFile, fGpuMem)
+        pfile2pbm.createPbmDataset([['train', train_data_file], ['valid', valid_data_file]], sDataDir, sDataProtoFile, fGpuMem)
     else:
         print 'Found data.pbtxt at', sDataProtoFile
         print 'Skip generating dataset'
