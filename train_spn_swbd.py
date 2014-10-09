@@ -107,8 +107,6 @@ if __name__ == '__main__':
 
         sModelFile = os.path.join(sModelDir, 'spn_conv.pbtxt')
         util.WriteProto(sModelFile, model)
-	        
-	exit(1) 
 	
         trainOp = util.ReadProto(os.path.join(sCurrentDir, 'prototype/train.pbtxt'), dl.Operation())
         sCheckpointDir = os.path.join(sModelDir, 'cp')
