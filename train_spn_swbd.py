@@ -69,7 +69,7 @@ if __name__ == '__main__':
         sys.stdout.flush()
         
     if not os.path.exists(sOutputModelFile):    
-        # modify architecture...
+        print 'modify the architecture...'
         sModelDir = os.path.join(wdir, 'model/')
         createDir(sModelDir)
         sCurrentDir = os.path.split(os.path.realpath(os.path.abspath(__file__)))[0]
@@ -105,6 +105,37 @@ if __name__ == '__main__':
 	model.edges[idx+3].node1='hidden4'
 	model.edges[idx+3].node2='output'
 
+	# added by LJS: Change tanh to sigmoid
+        #for n in model.nodes:
+	#	if n.name=='input' or n.name=='output':
+	#		continue
+	#	n.activation=2 #2 is the code for LOGISTIC
+	
+	# add by ljs: use pretrained option from CNN
+	for e in model.edges:
+		if e.node1=='input':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/input_conv1.csv'	
+		if e.node1=='conv1':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/conv1_conv2.csv'
+		if e.node1=='conv2':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/conv2_h1.csv'
+		if e.node1=='hidden1':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h1_h2.csv'
+		if e.node1=='hidden2':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h2_h3.csv'
+		if e.node1=='hidden3':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h3_h4.csv'
+		if e.node1=='hidden4':
+			e.hyper_params.initialization=5 # 5 is for PRETRAINED
+			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h4_output.csv'
+
+
         sModelFile = os.path.join(sModelDir, 'spn_conv.pbtxt')
         util.WriteProto(sModelFile, model)
 	
@@ -114,6 +145,9 @@ if __name__ == '__main__':
         trainOp.data_proto = sDataProtoFile
         trainOp.checkpoint_directory = sCheckpointDir
         trainOp.verbose = False
+	trainOp.batch_size=256
+	trainOp.stop_condition.steps=250000
+	trainOp.checkpoint_after=2000
         sTrainOpFile = os.path.join(sModelDir, 'train.pbtxt')
         util.WriteProto(sTrainOpFile, trainOp)
         
@@ -122,9 +156,11 @@ if __name__ == '__main__':
         evalOp.verbose = False
         evalOp.result_file = os.path.join(sModelDir, 'result_test.csv')
         evalOp.result_file_validation_set = os.path.join(sModelDir, 'result_val.csv')
+	evalOp.batch_size=256
         sEvalOpFile = os.path.join(sModelDir, 'eval.pbtxt')
         util.WriteProto(sEvalOpFile, evalOp)
-        
+        print 'Model files are saved.'
+        print 'Run the model...'        
         # run it
         args = [sDeeplearnPath, 'train', sModelFile, \
                 '--train-op=%s' % sTrainOpFile,
@@ -134,7 +170,7 @@ if __name__ == '__main__':
         if pr.returncode != 0:
             exit(1)
         
-        # write the output..
+        print 'write the output..'
         sBestModel = os.path.join(sCheckpointDir, 'spn_conv_train_BEST.fnn')
         if not os.path.exists(sBestModel):
             sBestModel = os.path.join(sCheckpointDir, 'spn_conv_train_LAST.fnn')
