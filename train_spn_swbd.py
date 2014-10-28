@@ -105,35 +105,69 @@ if __name__ == '__main__':
 	model.edges[idx+3].node1='hidden4'
 	model.edges[idx+3].node2='output'
 
-	# added by LJS: Change tanh to sigmoid
-        #for n in model.nodes:
-	#	if n.name=='input' or n.name=='output':
-	#		continue
-	#	n.activation=2 #2 is the code for LOGISTIC
+	# added by LJS: Change tanh to sigmoid 
+	if True:
+        	for n in model.nodes:
+			if n.name=='input' or n.name=='output':
+				continue
+			n.activation=2 #2 is the code for LOGISTIC
 	
 	# add by ljs: use pretrained option from CNN
-	for e in model.edges:
-		if e.node1=='input':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/input_conv1.csv'	
-		if e.node1=='conv1':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/conv1_conv2.csv'
-		if e.node1=='conv2':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/conv2_h1.csv'
-		if e.node1=='hidden1':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h1_h2.csv'
-		if e.node1=='hidden2':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h2_h3.csv'
-		if e.node1=='hidden3':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h3_h4.csv'
-		if e.node1=='hidden4':
-			e.hyper_params.initialization=5 # 5 is for PRETRAINED
-			e.hyper_params.pretrained_init='/home/jsli/spn_initial/h4_output.csv'
+	if True:
+		model.hyper_params.initialization=5 # 5 is for PRETRAINED
+		for e in model.edges:
+			if e.node1=='input':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/input_conv1.csv'	
+			if e.node1=='conv1':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/conv1_conv2.csv'
+			if e.node1=='conv2':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/conv2_h1.csv'
+			if e.node1=='hidden1':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/h1_h2.csv'
+			if e.node1=='hidden2':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/h2_h3.csv'
+			if e.node1=='hidden3':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/h3_h4.csv'
+			if e.node1=='hidden4':
+				e.hyper_params.initialization=5 # 5 is for PRETRAINED
+				e.hyper_params.pretrained_init='/home/jsli/spn_initial/h4_output.csv'
+		for n in model.nodes:
+			if n.name=='conv1':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/conv1_bias.csv'	
+			if n.name=='conv2':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/conv2_bias.csv'	
+			if n.name=='output':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/output_bias.csv'	
+			if n.name=='hidden1':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/h1_bias.csv'	
+			if n.name=='hidden2':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/h2_bias.csv'	
+			if n.name=='hidden3':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/h3_bias.csv'	
+			if n.name=='hidden4':
+				n.hyper_params.initialization=5 # 5 is for PRETRAINED
+				n.hyper_params.pretrained_init='/home/jsli/spn_initial/h4_bias.csv'	
+
+        # modify training parameters to those of CNN
+	if True:   
+		model.hyper_params.base_learningrate=0.08
+		model.hyper_params.learningrate_decay_half_life=10000
+		model.hyper_params.initial_momentum=0.5
+		model.hyper_params.final_momentum=0.5
+		model.hyper_params.apply_l2_decay=False
+		model.hyper_params.min_learningrate = 0.00001
 
 
         sModelFile = os.path.join(sModelDir, 'spn_conv.pbtxt')
@@ -146,7 +180,7 @@ if __name__ == '__main__':
         trainOp.checkpoint_directory = sCheckpointDir
         trainOp.verbose = False
 	trainOp.batch_size=256
-	trainOp.stop_condition.steps=250000
+	trainOp.stop_condition.steps=50000
 	trainOp.checkpoint_after=2000
         sTrainOpFile = os.path.join(sModelDir, 'train.pbtxt')
         util.WriteProto(sTrainOpFile, trainOp)
