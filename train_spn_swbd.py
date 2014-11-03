@@ -113,7 +113,7 @@ if __name__ == '__main__':
 			n.activation=2 #2 is the code for LOGISTIC
 	
 	# add by ljs: use pretrained option from CNN
-	if True:
+	if False:
 		model.hyper_params.initialization=5 # 5 is for PRETRAINED
 		for e in model.edges:
 			if e.node1=='input':
@@ -159,11 +159,19 @@ if __name__ == '__main__':
 			if n.name=='hidden4':
 				n.hyper_params.initialization=5 # 5 is for PRETRAINED
 				n.hyper_params.pretrained_init='/home/jsli/spn_initial/h4_bias.csv'	
+	else:  # without pretraining, the initialization is DENSE_UNIFORM_SQRT_FAN_IN_PLUS_FAN_OUT for edges except for hidden4-output, which is zeros
+		for e in model.edges:
+			if e.node1=='hidden4':
+				e.hyper_params.initialization=0 # 0 is for CONSTANT
+				e.hyper_params.constant=0.0
+			else:
+				e.hyper_params.initialization=6 # 6 is for DENSE_UNIFORM_SQRT_FAN_IN_PLUS_FAN_OUT
+				e.hyper_params.constant=0.0
 
         # modify training parameters to those of CNN
 	if True:   
 		model.hyper_params.base_learningrate=0.08
-		model.hyper_params.learningrate_decay_half_life=10000
+		model.hyper_params.learningrate_decay_half_life=200000
 		model.hyper_params.initial_momentum=0.5
 		model.hyper_params.final_momentum=0.5
 		model.hyper_params.apply_l2_decay=False
@@ -180,8 +188,9 @@ if __name__ == '__main__':
         trainOp.checkpoint_directory = sCheckpointDir
         trainOp.verbose = False
 	trainOp.batch_size=256
-	trainOp.stop_condition.steps=50000
-	trainOp.checkpoint_after=2000
+	trainOp.stop_condition.steps=3200000
+	trainOp.checkpoint_after=160000   # for SWBD 110h, all the trainig dataset contains 153483 batches (batch size: 256)
+	trainOp.eval_after= 160000
         sTrainOpFile = os.path.join(sModelDir, 'train.pbtxt')
         util.WriteProto(sTrainOpFile, trainOp)
         
