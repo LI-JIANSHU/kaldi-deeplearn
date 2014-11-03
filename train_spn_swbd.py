@@ -171,6 +171,7 @@ if __name__ == '__main__':
         # modify training parameters to those of CNN
 	if True:   
 		model.hyper_params.base_learningrate=0.08
+		model.hyper_params.learningrate_decay=5  # 5 is for DECAY_EVAL_ERROR_DEPENDENT 
 		model.hyper_params.learningrate_decay_half_life=200000
 		model.hyper_params.initial_momentum=0.5
 		model.hyper_params.final_momentum=0.5
