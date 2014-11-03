@@ -166,7 +166,6 @@ if __name__ == '__main__':
 				e.hyper_params.constant=0.0
 			else:
 				e.hyper_params.initialization=6 # 6 is for DENSE_UNIFORM_SQRT_FAN_IN_PLUS_FAN_OUT
-				e.hyper_params.constant=0.0
 
         # modify training parameters to those of CNN
 	if True:   
