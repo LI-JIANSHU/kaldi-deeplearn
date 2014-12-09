@@ -80,7 +80,7 @@ if __name__ == '__main__':
                 n.dimension = num_outputs
                 break
 
-	# added by LJS: Add two more hidden layers for the CNN for SWDB 
+	# added by LJS: Add two more hidden layers for SWDB 
         for n in model.nodes:
             if n.name == 'hidden1':
                 tmp=n
@@ -112,7 +112,7 @@ if __name__ == '__main__':
 				continue
 			n.activation=2 #2 is the code for LOGISTIC
 	
-	# add by ljs: use pretrained option from CNN
+	# add by ljs: use pretrained option
 	if False:
 		model.hyper_params.initialization=5 # 5 is for PRETRAINED
 		for e in model.edges:
@@ -167,7 +167,7 @@ if __name__ == '__main__':
 			else:
 				e.hyper_params.initialization=6 # 6 is for DENSE_UNIFORM_SQRT_FAN_IN_PLUS_FAN_OUT
 
-        # modify training parameters to those of CNN
+        # modify training parameters
 	if True:   
 		model.hyper_params.base_learningrate=0.08
 		model.hyper_params.learningrate_decay=5  # 5 is for DECAY_EVAL_ERROR_DEPENDENT 
